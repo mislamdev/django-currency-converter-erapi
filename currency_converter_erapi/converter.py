@@ -154,7 +154,12 @@ class CurrencyConverter:
             if self.api_key:
                 headers['Authorization'] = f'Bearer {self.api_key}'
 
-            response = requests.get(url, headers=headers, timeout=10)
+            try:
+                response = requests.get(url, headers=headers, timeout=10)
+            except Exception as e:
+                # Catch any exception from the requests call
+                logger.error("Network error fetching rates for %s: %s", base_currency, str(e))
+                raise NetworkError(f"Network error: {str(e)}")
 
             if response.status_code == 429:
                 logger.error("API rate limit exceeded for %s", base_currency)
@@ -163,8 +168,12 @@ class CurrencyConverter:
                 logger.error("API request failed with status %d for %s", response.status_code, base_currency)
                 raise APIError(f"API request failed with status {response.status_code}")
             
-            data = response.json()
-            
+            try:
+                data = response.json()
+            except (json.JSONDecodeError, ValueError) as e:
+                logger.error("Invalid JSON response for %s: %s", base_currency, str(e))
+                raise APIError(f"Invalid JSON response: {str(e)}")
+
             # Validate response structure
             if 'rates' not in data:
                 logger.error("Invalid API response format for %s", base_currency)
@@ -179,13 +188,10 @@ class CurrencyConverter:
 
             return data
             
-        except requests.RequestException as e:
-            logger.error("Network error fetching rates for %s: %s", base_currency, str(e))
-            raise NetworkError(f"Network error: {str(e)}")
-        except json.JSONDecodeError as e:
-            logger.error("Invalid JSON response for %s: %s", base_currency, str(e))
-            raise APIError(f"Invalid JSON response: {str(e)}")
-    
+        except (RateLimitError, APIError, NetworkError):
+            # Re-raise our custom exceptions
+            raise
+
     def convert(self, amount: Union[int, float, Decimal], from_currency: str, to_currency: str) -> Decimal:
         """
         Convert an amount from one currency to another.

@@ -1,0 +1,112 @@
+name: Changelog Validation
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'CHANGELOG.md'
+      - 'scripts/changelog.py'
+
+jobs:
+  validate-changelog:
+    name: Validate Changelog Format
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Validate changelog format
+        run: |
+          python scripts/changelog.py validate
+
+      - name: Check for unreleased changes
+        run: |
+          # Check if there are unreleased changes when CHANGELOG.md is modified
+          if grep -q "### Added\|### Changed\|### Fixed\|### Security\|### Removed\|### Deprecated" CHANGELOG.md; then
+            echo "✅ Changelog contains unreleased changes"
+          else
+            echo "⚠️  No unreleased changes found in changelog"
+            echo "If this PR introduces user-facing changes, please add them to the changelog:"
+            echo "python scripts/changelog.py add --type [added|changed|fixed|security|removed|deprecated] --message 'Description'"
+          fi
+
+  check-changelog-updated:
+    name: Check if Changelog Should Be Updated
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for user-facing changes
+        id: check_changes
+        run: |
+          # Get list of changed files
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "Changed files: $changed_files"
+          
+          # Check if any code files were changed (excluding tests, docs, and config)
+          code_changed=false
+          for file in $changed_files; do
+            if [[ $file == currency_converter_erapi/*.py ]] || 
+               [[ $file == currency_converter_erapi/management/commands/*.py ]] ||
+               [[ $file == setup.py ]]; then
+              code_changed=true
+              break
+            fi
+          done
+          
+          # Check if changelog was updated
+          changelog_updated=false
+          if echo "$changed_files" | grep -q "CHANGELOG.md"; then
+            changelog_updated=true
+          fi
+          
+          echo "code_changed=$code_changed" >> $GITHUB_OUTPUT
+          echo "changelog_updated=$changelog_updated" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR if changelog update needed
+        if: steps.check_changes.outputs.code_changed == 'true' && steps.check_changes.outputs.changelog_updated == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📝 Changelog Update Needed
+              
+              This PR contains code changes but the changelog hasn't been updated.
+              
+              If this PR introduces user-facing changes, please add them to the changelog:
+              
+              \`\`\`bash
+              # Add an entry for new features
+              python scripts/changelog.py add --type added --message "Description of new feature"
+              
+              # Add an entry for bug fixes
+              python scripts/changelog.py add --type fixed --message "Description of bug fix"
+              
+              # Add an entry for changes
+              python scripts/changelog.py add --type changed --message "Description of change"
+              \`\`\`
+              
+              **Entry Types:**
+              - \`added\` - New features
+              - \`changed\` - Changes in existing functionality
+              - \`fixed\` - Bug fixes
+              - \`security\` - Security fixes
+              - \`deprecated\` - Soon-to-be removed features
+              - \`removed\` - Removed features
+              
+              If this PR doesn't require a changelog entry (e.g., internal refactoring, test changes), you can ignore this message.`
+            });

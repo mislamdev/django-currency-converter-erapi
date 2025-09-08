@@ -78,9 +78,10 @@ class Command(BaseCommand):
                 result = converter.convert(amount, from_currency, to_currency)
                 
                 # Display result
+                amount_display = int(amount) if amount == int(amount) else amount
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f"{amount} {from_currency} = {result} {to_currency}"
+                        f"{amount_display} {from_currency} = {result} {to_currency}"
                     )
                 )
                 
