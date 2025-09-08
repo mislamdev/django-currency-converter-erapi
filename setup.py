@@ -8,7 +8,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='django-currency-converter-erapi',
-    version='1.0.3',
+    version='1.0.0',
     description='A Django application for currency conversion using real-time exchange rates',
     long_description=long_description,
     long_description_content_type='text/markdown',
