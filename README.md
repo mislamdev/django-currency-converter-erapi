@@ -16,19 +16,19 @@ A Django application for converting currencies using real-time exchange rates fr
 
 1. Install the package:
 ```bash
-pip install django-currency-converter-erAPI
+pip install django-currency-converter-erapi
 ```
 
 2. For .env file support (recommended), also install:
 ```bash
-pip install django-currency-converter-erAPI[dotenv]
+pip install django-currency-converter-erapi[dotenv]
 ```
 
 3. Add `currency_converter` to your Django project's `INSTALLED_APPS` in `settings.py`:
 ```python
 INSTALLED_APPS = [
     # ... other apps
-    'currency_converter_erAPI',
+    'currency_converter_erapi',
 ]
 ```
 
@@ -105,8 +105,8 @@ python manage.py convert_currency 0 USD EUR --list-currencies
 ### Using the Converter Class in Your Code
 
 ```python
-from currency_converter_erAPI.converter import CurrencyConverter
-from currency_converter_erAPI.exceptions import InvalidCurrencyError, APIError
+from currency_converter_erapi.converter import CurrencyConverter
+from currency_converter_erapi.exceptions import InvalidCurrencyError, APIError
 
 try:
     converter = CurrencyConverter()
@@ -206,7 +206,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'currency_converter_erAPI': {
+        'currency_converter_erapi': {
             'handlers': ['console'],
             'level': 'INFO',
         },

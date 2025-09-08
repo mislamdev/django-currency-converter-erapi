@@ -10,8 +10,8 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 from io import StringIO
 
-from currency_converter_erAPI.converter import CurrencyConverter
-from currency_converter_erAPI.exceptions import (
+from currency_converter_erapi.converter import CurrencyConverter
+from currency_converter_erapi.exceptions import (
     InvalidCurrencyError,
     APIError,
     RateLimitError,
@@ -76,7 +76,7 @@ class CurrencyConverterTestCase(TestCase):
         key = self.converter.get_cache_key('EUR')
         self.assertEqual(key, 'exchange_rates_eur')
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rates_success(self, mock_get):
         """Test successful API call for exchange rates"""
         mock_response = Mock()
@@ -97,7 +97,7 @@ class CurrencyConverterTestCase(TestCase):
         self.assertIn('EUR', rates['rates'])
         self.assertEqual(rates['rates']['EUR'], 0.85)
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rates_caching(self, mock_get):
         """Test that exchange rates are cached properly"""
         mock_response = Mock()
@@ -118,7 +118,7 @@ class CurrencyConverterTestCase(TestCase):
         
         self.assertEqual(rates1, rates2)
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rates_rate_limit_error(self, mock_get):
         """Test handling of rate limit errors"""
         mock_response = Mock()
@@ -128,7 +128,7 @@ class CurrencyConverterTestCase(TestCase):
         with self.assertRaises(RateLimitError):
             self.converter.get_exchange_rates('USD')
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rates_api_error(self, mock_get):
         """Test handling of API errors"""
         mock_response = Mock()
@@ -138,7 +138,7 @@ class CurrencyConverterTestCase(TestCase):
         with self.assertRaises(APIError):
             self.converter.get_exchange_rates('USD')
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rates_network_error(self, mock_get):
         """Test handling of network errors"""
         mock_get.side_effect = Exception("Network error")
@@ -146,7 +146,7 @@ class CurrencyConverterTestCase(TestCase):
         with self.assertRaises(NetworkError):
             self.converter.get_exchange_rates('USD')
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rates_invalid_json(self, mock_get):
         """Test handling of invalid JSON response"""
         mock_response = Mock()
@@ -157,7 +157,7 @@ class CurrencyConverterTestCase(TestCase):
         with self.assertRaises(APIError):
             self.converter.get_exchange_rates('USD')
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_convert_same_currency(self, mock_get):
         """Test conversion between same currencies"""
         result = self.converter.convert(100, 'USD', 'USD')
@@ -166,7 +166,7 @@ class CurrencyConverterTestCase(TestCase):
         # Should not make API call for same currency
         mock_get.assert_not_called()
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_convert_different_currencies(self, mock_get):
         """Test conversion between different currencies"""
         mock_response = Mock()
@@ -196,7 +196,7 @@ class CurrencyConverterTestCase(TestCase):
         with self.assertRaises(InvalidCurrencyError):
             self.converter.convert(100, 'USD', 'INVALID')
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_convert_precision(self, mock_get):
         """Test conversion precision and rounding"""
         mock_response = Mock()
@@ -210,7 +210,7 @@ class CurrencyConverterTestCase(TestCase):
         result = self.converter.convert(100, 'USD', 'EUR')
         self.assertEqual(result, Decimal('85.68'))  # Rounded to 2 decimal places
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_get_exchange_rate(self, mock_get):
         """Test getting exchange rate between currencies"""
         mock_response = Mock()
@@ -242,7 +242,7 @@ class CurrencyConverterTestCase(TestCase):
 class ManagementCommandTestCase(TestCase):
     """Test cases for management commands"""
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_convert_currency_command(self, mock_get):
         """Test convert_currency management command"""
         mock_response = Mock()
@@ -260,7 +260,7 @@ class ManagementCommandTestCase(TestCase):
         self.assertIn('100 USD = 85.00 EUR', output)
         self.assertIn('Exchange rate: 1 USD = 0.85 EUR', output)
     
-    @patch('currency_converter_erAPI.converter.requests.get')
+    @patch('currency_converter_erapi.converter.requests.get')
     def test_convert_currency_command_rate_only(self, mock_get):
         """Test convert_currency command with rate-only option"""
         mock_response = Mock()
