@@ -1,5 +1,5 @@
 # Core dependencies
-Django>=3.2,<5.0
+Django>=3.2,<5.3
 requests>=2.25.0,<3.0
 
 # Development dependencies

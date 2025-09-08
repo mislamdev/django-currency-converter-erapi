@@ -15,12 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Network error handling for API requests
 - Test coverage reporting with pytest-cov
 - Automated CI workflow for multiple Python versions (3.8-3.12)
+- Django 5.2 support with full compatibility testing
 
 ### Changed
 - Improved test suite configuration with conftest.py for proper Django setup
 - Enhanced management command output formatting for better user experience
 - Updated CI workflow to include environment variables for Django settings
 - Restructured exception handling in currency converter for better error reporting
+- Enhanced CI workflow to test multiple Django versions including 5.2
+- Enhanced CI workflow to test multiple Django versions including 5.2
+- Enhanced CI workflow to test multiple Django versions including 5.2
+- Enhanced CI workflow to test multiple Django versions including 5.2
 
 ### Fixed
 - Django settings configuration issue in pytest environment
@@ -30,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test dependencies installation in CI environment
 
 - Resolved Django settings configuration issues in test environment
+- Fixed pytest Django configuration issues in CI environment
 ## [1.0.1] - 2024-XX-XX
 
 ### Added

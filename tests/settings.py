@@ -1,6 +1,7 @@
 """
 Test settings for django-currency-converter-erapi
 """
+import os
 
 SECRET_KEY = 'test-secret-key-for-currency-converter'
 
@@ -28,7 +29,7 @@ USE_TZ = True
 
 # Currency converter settings for testing
 CURRENCY_CACHE_TIMEOUT = 60  # Short timeout for tests
-CURRENCY_API_KEY = None  # Use free tier for tests
+CURRENCY_API_KEY = os.environ.get('CURRENCY_API_KEY')  # Use API key from environment if available
 
 LOGGING = {
     'version': 1,

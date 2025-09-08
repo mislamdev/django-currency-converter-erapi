@@ -20,7 +20,7 @@ setup(
     zip_safe=False,
     python_requires='>=3.8',
     install_requires=[
-        'Django>=3.2,<5.0',
+        'Django>=3.2,<5.3',
         'requests>=2.25.0,<3.0',
     ],
     extras_require={
@@ -44,6 +44,9 @@ setup(
         'Framework :: Django :: 4.0',
         'Framework :: Django :: 4.1',
         'Framework :: Django :: 4.2',
+        'Framework :: Django :: 5.0',
+        'Framework :: Django :: 5.1',
+        'Framework :: Django :: 5.2',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',

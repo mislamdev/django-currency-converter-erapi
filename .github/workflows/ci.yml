@@ -14,6 +14,21 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        django-version: ["3.2", "4.0", "4.1", "4.2", "5.0", "5.1", "5.2"]
+        exclude:
+          # Django 5.0+ requires Python 3.10+
+          - python-version: "3.8"
+            django-version: "5.0"
+          - python-version: "3.8"
+            django-version: "5.1"
+          - python-version: "3.8"
+            django-version: "5.2"
+          - python-version: "3.9"
+            django-version: "5.0"
+          - python-version: "3.9"
+            django-version: "5.1"
+          - python-version: "3.9"
+            django-version: "5.2"
 
     env:
       DJANGO_SETTINGS_MODULE: tests.settings
@@ -35,13 +50,26 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install Django~=${{ matrix.django-version }}.0
           pip install -r requirements-dev.txt
           pip install -e .
 
+      - name: Django Check
+        run: |
+          cd tests
+          python -c "import django; django.setup()"
+
       - name: Run pytest
         run: |
-          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-          pytest --cov --maxfail=1
+          export PYTHONPATH="${PYTHONPATH}:$(pwd):$(pwd)/tests"
+          pytest --cov=currency_converter_erapi --cov-report=xml --cov-report=term-missing --maxfail=1
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
 
       - name: Validate changelog
         run: |

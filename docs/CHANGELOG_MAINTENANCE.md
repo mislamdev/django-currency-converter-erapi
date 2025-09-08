@@ -125,6 +125,79 @@ If you prefer to edit the changelog manually:
 3. Write clear, user-focused descriptions
 4. When releasing, move entries from `[Unreleased]` to a new version section
 
+## Automated Version Management
+
+### Overview
+
+The project now includes an **automated version management system** that analyzes your changelog entries and suggests appropriate version bumps according to Semantic Versioning rules.
+
+### How It Works
+
+The version manager (`scripts/version_manager.py`) automatically:
+
+1. **Analyzes changelog entries** in the `[Unreleased]` section
+2. **Categorizes changes** by type (breaking, features, fixes)
+3. **Suggests version bumps** based on semantic versioning rules:
+   - **MAJOR** (1.0.0 → 2.0.0): Breaking changes, removed features
+   - **MINOR** (1.0.0 → 1.1.0): New features, added functionality
+   - **PATCH** (1.0.0 → 1.0.1): Bug fixes, security patches
+
+### Usage
+
+```bash
+# Check current version
+python scripts/version_manager.py current
+
+# Analyze changelog and suggest version bump
+python scripts/version_manager.py suggest
+
+# Manually bump version
+python scripts/version_manager.py bump --type patch
+python scripts/version_manager.py bump --type minor
+python scripts/version_manager.py bump --type major
+
+# Auto-bump based on changelog analysis
+python scripts/version_manager.py bump --auto
+```
+
+### Automated Decision Rules
+
+The system follows these rules when analyzing changelog entries:
+
+**MAJOR version bump when:**
+- `### Removed` section contains entries
+- `### Changed` section mentions "breaking", "incompatible", "removed"
+- Any entry indicates breaking changes
+
+**MINOR version bump when:**
+- `### Added` section contains new features
+- No breaking changes detected
+
+**PATCH version bump when:**
+- `### Fixed` or `### Security` sections contain entries
+- Only bug fixes or patches, no new features
+
+### Integration with Release Workflow
+
+```bash
+# Complete release workflow
+# 1. Add your changes to changelog
+python scripts/changelog.py add --type added --message "New feature X"
+
+# 2. Let the system suggest version bump
+python scripts/version_manager.py suggest
+
+# 3. Auto-bump version and create release
+python scripts/version_manager.py bump --auto
+python scripts/changelog.py release --version $(python scripts/version_manager.py current)
+
+# 4. Commit and tag
+git add setup.py CHANGELOG.md
+git commit -m "Release version $(python scripts/version_manager.py current)"
+git tag "v$(python scripts/version_manager.py current)"
+git push origin main --tags
+```
+
 ## Example Workflow
 
 ```bash
