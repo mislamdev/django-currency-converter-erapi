@@ -1,5 +1,5 @@
 """
-Test settings for django-currency-converter-erapi
+Test settings for django-currency-converter-erAPI
 """
 
 SECRET_KEY = 'test-secret-key-for-currency-converter'
@@ -7,7 +7,7 @@ SECRET_KEY = 'test-secret-key-for-currency-converter'
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.auth',
-    'currency_converter',
+    'currency_converter_erAPI',
 ]
 
 DATABASES = {
@@ -39,7 +39,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'currency_converter': {
+        'currency_converter_erAPI': {
             'handlers': ['console'],
             'level': 'DEBUG',
         },

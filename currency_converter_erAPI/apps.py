@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class CurrencyConverterConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'currency_converter'
+    name = 'currency_converter_erAPI'
     verbose_name = 'Currency Converter'
 
     def ready(self):

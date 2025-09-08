@@ -8,8 +8,8 @@ Example:
     python manage.py convert_currency 100 USD EUR
 """
 from django.core.management.base import BaseCommand, CommandError
-from currency_converter.converter import CurrencyConverter
-from currency_converter.exceptions import (
+from currency_converter_erAPI.converter import CurrencyConverter
+from currency_converter_erAPI.exceptions import (
     CurrencyConverterError,
     InvalidCurrencyError,
     APIError,
