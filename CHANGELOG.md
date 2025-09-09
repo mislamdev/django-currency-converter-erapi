@@ -7,7 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Comprehensive currency support expansion from 24 to 168 currencies
+- Support for all major world currencies including:
+  - Middle Eastern currencies (AED, SAR, QAR, etc.)
+  - African currencies (ZAR, NGN, EGP, etc.)
+  - Asian currencies (INR, CNY, JPY, KRW, etc.)
+  - European currencies (EUR, GBP, CHF, SEK, etc.)
+  - American currencies (USD, CAD, BRL, MXN, etc.)
+  - Pacific and Caribbean currencies (AUD, NZD, FJD, etc.)
+  - Special Drawing Rights (XDR) and regional franc systems (XAF, XOF, XPF)
+- Enhanced currency validation with expanded VALID_CURRENCIES set
+- Support for emerging market currencies and island nation currencies
+- Comprehensive currency support expansion from 24 to 168 currencies
+- Support for all major world currencies including Middle Eastern, African, Asian, European, American, and Pacific currencies
+- Special Drawing Rights (XDR) and regional franc systems (XAF, XOF, XPF) support
 
+### Changed
+- Expanded VALID_CURRENCIES from 24 to 168 supported currency codes
+- Improved currency validation to handle broader international requirements
+- Enhanced global compatibility for worldwide currency conversion needs
+
+- Expanded VALID_CURRENCIES from 24 to 168 supported currency codes
 ## [1.1.0] - 2025-09-09
 
 ### Added
