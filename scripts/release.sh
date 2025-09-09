@@ -149,7 +149,23 @@ new_content = re.sub(
 with open('setup.py', 'w') as f:
     f.write(new_content)
 
-print('✅ Version updated successfully')
+init_file = 'currency_converter_erapi/__init__.py'
+
+if os.path.exists(init_file):
+    with open(init_file, 'r') as f:
+        init_content = f.read()
+
+# Update __version__ variable
+new_init_content = re.sub(
+    r\"__version__\s*=\s*['\\\"']([^'\\\"]+)['\\\"']\",
+    f\"__version__ = '{new_version}'\",
+    init_content
+)
+
+with open(init_file, 'w') as f:
+    f.write(new_init_content)
+
+print('✅ Version updated successfully in setup.py and init.py')
 "
 
 # Create changelog release
@@ -190,10 +206,9 @@ echo "  - Version bumped from $current_version to $new_version ($bump_type)"
 echo "  - Changelog updated"
 echo "  - Tests passed"
 echo "  - Git commit and tag created"
-git add setup.py CHANGELOG.md currency_converter_erapi/__init__.py
+
 echo -e "${YELLOW}📤 Next steps:${NC}"
 echo "  1. Push to remote: git push origin main --tags"
-- Updated version to $new_version in setup.py and __init__.py
 echo "     - Run CI tests"
 echo "     - Build and publish to PyPI (if configured)"
 echo "     - Create GitHub release"
