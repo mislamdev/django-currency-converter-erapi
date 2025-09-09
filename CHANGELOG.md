@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.2.0] - 2025-09-09
+
 ### Added
 - Comprehensive currency support expansion from 24 to 168 currencies
 - Support for all major world currencies including:
