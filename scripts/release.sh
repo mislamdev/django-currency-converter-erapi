@@ -135,6 +135,8 @@ echo -e "${GREEN}🎯 New version will be: $new_version${NC}"
 echo -e "${BLUE}⬆️  Updating version in setup.py...${NC}"
 python -c "
 import re
+import sys
+new_version = '$new_version'
 with open('setup.py', 'r') as f:
     content = f.read()
 
